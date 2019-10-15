@@ -9,7 +9,7 @@
 #ifndef IMGWINDOW_H
 #define IMGWINDOW_H
 
-#include "SysOpenGL.h"
+#include <GL/glew.h>
 #include <string>
 #include <XPLMDisplay.h>
 #include <XPCProcessing.h>

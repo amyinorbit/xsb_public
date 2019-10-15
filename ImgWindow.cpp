@@ -9,8 +9,7 @@
 #include <XPLMDataAccess.h>
 #include <XPLMDisplay.h>
 #include <XPLMGraphics.h>
-#include "SysOpenGL.h"
-#include "XOGLUtils.h"
+#include <GL/glew.h>
 #include "ImgWindow.h"
 
 
@@ -94,7 +93,7 @@ ImgWindow::ImgWindow(
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, width, height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, pixels);
 	io.Fonts->TexID = (void *)(intptr_t)(mFontTexture);
 	// disable OSX-like keyboard behaviours always - we don't have the keymapping for it.
-	io.OptMacOSXBehaviors = false;
+	io.ConfigMacOSXBehaviors = false;
 
 	XPLMCreateWindow_t	windowParams = {
 		sizeof(windowParams),
