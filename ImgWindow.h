@@ -12,7 +12,6 @@
 #include <GL/glew.h>
 #include <string>
 #include <XPLMDisplay.h>
-#include <XPCProcessing.h>
 #include <imgui.h>
 
 /** ImgWindow is a Window for creating dear imgui widgets within.
