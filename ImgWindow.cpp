@@ -12,6 +12,7 @@
 #include <GL/glew.h>
 #include "ImgWindow.h"
 
+#include <acfutils/widget.h>
 
 static XPLMDataRef		gVrEnabledRef			= nullptr;
 static XPLMDataRef		gModelviewMatrixRef		= nullptr;
@@ -493,3 +494,20 @@ ImgWindow::SafeDelete()
 	mSelfDestruct = true;
 }
 
+void
+ImgWindow::BringToFront()
+{
+	XPLMBringWindowToFront(mWindowID);
+}
+
+void
+ImgWindow::Center()
+{
+	classic_win_center(mWindowID);
+}
+
+void
+ImgWindow::SetResizingLimits(int minw, int minh, int maxw, int maxh)
+{
+	XPLMSetWindowResizingLimits(mWindowID, minw, minh, maxw, maxh);
+}

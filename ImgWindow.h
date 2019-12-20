@@ -205,6 +205,10 @@ public:
 	 * @return true if the window is visible, false otherwise.
 	*/
 	bool GetVisible() const;
+
+	void BringToFront(void);
+	void Center(void);
+	void SetResizingLimits(int minw, int minh, int maxw, int maxh);
 };
 
 #endif // #ifndef IMGWINDOW_H
