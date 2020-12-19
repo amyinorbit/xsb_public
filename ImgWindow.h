@@ -35,15 +35,12 @@
 #ifndef IMGWINDOW_H
 #define IMGWINDOW_H
 
-#include "SystemGL.h"
-#include "XOGLUtils.h"
-
+#include <GL/glew.h>
 #include <string>
 #include <memory>
 #include <queue>
 
 #include <XPLMDisplay.h>
-#include <XPCProcessing.h>
 #include <imgui.h>
 
 #include "ImgFontAtlas.h"
@@ -248,6 +245,24 @@ private:
     int mRight;
 
     XPLMWindowLayer mPreferredLayer;
+
+	/** SetVisible() makes the window visible after making the onShow() call.
+	 * It is also at this time that the window will be relocated onto the VR
+	 * display if the VR headset is in use.
+	 *
+	 * @param inIsVisible true to be displayed, false if the window is to be 
+	 * hidden.
+	 */
+	virtual void SetVisible(bool inIsVisible);
+
+	/** GetVisible() returns the current window visibility.
+	 * @return true if the window is visible, false otherwise.
+	*/
+	bool GetVisible() const;
+
+	void BringToFront(void);
+	void Center(void);
+	void SetResizingLimits(int minw, int minh, int maxw, int maxh);
 };
 
 #endif // #ifndef IMGWINDOW_H
