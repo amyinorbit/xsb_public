@@ -81,8 +81,6 @@ ImgWindow::ImgWindow(
 		first_init=true;
 	}
 
-	// we render ourselves, we don't use the DrawListsFunc
-	io.RenderDrawListsFn = nullptr;
 	// set up the Keymap
 	io.KeyMap[ImGuiKey_Tab] = XPLM_VK_TAB;
 	io.KeyMap[ImGuiKey_LeftArrow] = XPLM_VK_LEFT;
