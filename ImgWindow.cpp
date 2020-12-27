@@ -329,6 +329,9 @@ ImgWindow::updateImgui()
 	float win_height = static_cast<float>(mTop - mBottom);
 
 	io.DeltaTime = XPLMGetDataf(gFrameRatePeriodRef);
+	// ImGui needs this to be positive!
+	if (io.DeltaTime <= 0)
+		io.DeltaTime = 1.0 / 60.0;
 	io.DisplaySize = ImVec2(win_width, win_height);
 	// in boxels, we're always scale 1, 1.
 	io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
