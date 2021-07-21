@@ -595,3 +595,9 @@ ImgWindow::SetResizingLimits(int minw, int minh, int maxw, int maxh)
 {
 	XPLMSetWindowResizingLimits(mWindowID, minw, minh, maxw, maxh);
 }
+
+void
+ImgWindow::SetPositioningMode(XPLMWindowPositioningMode mode, int monitor)
+{
+	XPLMSetWindowPositioningMode(mWindowID, mode, monitor);
+}

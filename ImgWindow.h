@@ -251,6 +251,7 @@ public:
 	void BringToFront(void);
 	void Center(void);
 	void SetResizingLimits(int minw, int minh, int maxw, int maxh);
+	void SetPositioningMode(XPLMWindowPositioningMode mode, int monitor);
 };
 
 #endif // #ifndef IMGWINDOW_H
