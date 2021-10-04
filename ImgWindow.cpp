@@ -62,6 +62,8 @@ ImgWindow::ImgWindow(
 	mFirstRender(true),
 	mFontAtlas(sFontAtlas)
 {
+	ImGuiContext *old_ctx = ImGui::GetCurrentContext();
+
     ImFontAtlas *iFontAtlas = nullptr;
     if (mFontAtlas) {
         mFontAtlas->bindTexture();
@@ -167,10 +169,15 @@ ImgWindow::ImgWindow(
 		HandleRightClickFuncCB,
 	};
 	mWindowID = XPLMCreateWindowEx(&windowParams);
+
+	if (old_ctx != NULL)
+		ImGui::SetCurrentContext(old_ctx);
 }
 
 ImgWindow::~ImgWindow()
 {
+	ImGuiContext *old_ctx = ImGui::GetCurrentContext();
+
 	ImGui::SetCurrentContext(mImGuiContext);
 	if (!mFontAtlas) {
 	    // if we didn't have an explicit font atlas, destroy the texture.
@@ -178,6 +185,9 @@ ImgWindow::~ImgWindow()
     }
 	ImGui::DestroyContext(mImGuiContext);
 	XPLMDestroyWindow(mWindowID);
+
+	if (old_ctx != NULL)
+		ImGui::SetCurrentContext(old_ctx);
 }
 
 void
