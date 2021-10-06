@@ -29,23 +29,35 @@
 #include <string>
 #include <vector>
 
+#if	!IBM
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif	/* !IBM */
+
 #include <acfutils/core.h>
 #include <acfutils/delay_line.h>
+#include <acfutils/helpers.h>
 
 #include "ImgWindow.h"
 
 typedef void (*file_win_done_cb_t)(std::string path, void *userinfo);
+
+typedef struct {
+	std::string	filename;
+	struct stat	st;
+} file_info_t;
 
 class ImgFileOpenWindow : public ImgWindow {
 	bool				save;
 	bool				confirm_overwrite;
 	delay_line_t			refresh_intval;
 	std::string			sel_filename = "";
-	std::vector<std::string>	filenames;
+	std::vector<file_info_t>	files;
 	std::string			extensions;
 	std::string			dirpath;
 	file_win_done_cb_t		done_cb;
 	void				*userinfo;
+	uint64_t			last_click_t;
 
 	void buildInterface(void);
 	void confirm(void);

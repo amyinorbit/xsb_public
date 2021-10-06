@@ -17,6 +17,13 @@
  */
 
 #include <algorithm>
+#include <time.h>
+
+#if	!IBM
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif	/* !IBM */
 
 #include <acfutils/assert.h>
 #include <acfutils/helpers.h>
@@ -53,6 +60,7 @@ ImgFileOpenWindow::ImgFileOpenWindow(std::string title, std::string dirpath,
 	delay_line_init(&refresh_intval, SEC2USEC(1));
 	delay_line_push_imm_u64(&refresh_intval, 1);
 	SetWindowTitle(title);
+	SetResizingLimits(WIN_WIDTH, 100, WIN_WIDTH, 1000000);
 }
 
 void
@@ -90,14 +98,26 @@ ImgFileOpenWindow::buildInterface(void)
 	refresh();
 
 	if (ImGui::BeginChild("dirlist", ImVec2(0, WIN_HEIGHT - 65))) {
-		 for (std::vector<std::string>::iterator it = filenames.begin();
-		    it != filenames.end(); it++) {
-			auto filename = *it;
-			bool is_sel = (filename.compare(this->sel_filename) ==
-			    0);
+		for (std::vector<file_info_t>::iterator it = files.begin();
+		    it != files.end(); it++) {
+			const file_info_t info = *it;
+			std::string fname = info.filename;
+			bool is_sel = (fname.compare(this->sel_filename) == 0);
+			char datebuf[64], line[128];
+			struct tm tm;
 
-			if (ImGui::Selectable(filename.c_str(), is_sel))
-				sel_filename = std::string(filename);
+			lacf_gmtime_r(&info.st.st_mtime, &tm);
+			strftime(datebuf, sizeof (datebuf), "%c", &tm);
+			snprintf(line, sizeof (line), "%-50s %s",
+			    fname.c_str(), datebuf);
+			if (ImGui::Selectable(line, is_sel)) {
+				sel_filename = std::string(fname);
+				if (is_sel &&
+				    microclock() - last_click_t < 250000) {
+					confirm();
+				}
+				last_click_t = microclock();
+			}
 			if (is_sel)
 				ImGui::SetItemDefaultFocus();
 		}
@@ -129,15 +149,13 @@ ImgFileOpenWindow::buildInterface(void)
 }
 
 static bool
-icomp(const std::string& str1, const std::string& str2)
+file_info_icomp(const file_info_t &info1, const file_info_t &info2)
 {
-	std::string str1_copy(str1);
-	std::string str2_copy(str2);
-	std::transform(str1_copy.begin(), str1_copy.end(), str1_copy.begin(),
-	    ::tolower);
-	std::transform(str2_copy.begin(), str2_copy.end(), str2_copy.begin(),
-	    ::tolower);
-	return (str1_copy.compare(str2_copy) < 0);
+	std::string fname1(info1.filename);
+	std::string fname2(info2.filename);
+	std::transform(fname1.begin(), fname1.end(), fname1.begin(), ::tolower);
+	std::transform(fname2.begin(), fname2.end(), fname2.begin(), ::tolower);
+	return (fname1.compare(fname2) < 0);
 }
 
 void
@@ -152,7 +170,7 @@ ImgFileOpenWindow::refresh(void)
 		return;
 	delay_line_push_imm_u64(&refresh_intval, 0);
 
-	filenames.clear();
+	files.clear();
 
 	exts = strsplit(extensions.c_str(), ";", true, &n_exts);
 	dp = opendir(dirpath.c_str());
@@ -170,12 +188,23 @@ ImgFileOpenWindow::refresh(void)
 		if (ext != NULL)
 			ext++;
 		for (size_t i = 0; i < n_exts; i++) {
-			if (match_extension(ext, exts[i]))
-				filenames.push_back(std::string(de->d_name));
+			if (match_extension(ext, exts[i])) {
+				file_info_t info = { .filename = de->d_name };
+				std::string path = dirpath + DIRSEP_S +
+				    de->d_name;
+				bool_t is_dir;
+
+				if (file_exists(path.c_str(), &is_dir) &&
+				    !is_dir &&
+				    stat(path.c_str(), &info.st) == 0) {
+					files.push_back(info);
+				}
+				break;
+			}
 		}
 	}
 	closedir(dp);
 	free_strlist(exts, n_exts);
 
-	std::sort(filenames.begin(), filenames.end(), icomp);
+	std::sort(files.begin(), files.end(), file_info_icomp);
 }
