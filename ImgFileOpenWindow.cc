@@ -60,7 +60,7 @@ ImgFileOpenWindow::ImgFileOpenWindow(std::string title, std::string dirpath,
 	delay_line_init(&refresh_intval, SEC2USEC(1));
 	delay_line_push_imm_u64(&refresh_intval, 1);
 	SetWindowTitle(title);
-	SetResizingLimits(WIN_WIDTH, 100, WIN_WIDTH, 1000000);
+	SetResizingLimits(WIN_WIDTH, WIN_HEIGHT, WIN_WIDTH, WIN_HEIGHT);
 }
 
 void
