@@ -25,10 +25,10 @@
 #include <unistd.h>
 #endif	/* !IBM */
 
+#include "ImgFileOpenWindow.h"
+
 #include <acfutils/assert.h>
 #include <acfutils/helpers.h>
-
-#include "ImgFileOpenWindow.h"
 
 #define	WIN_WIDTH	600
 #define	WIN_HEIGHT	600
