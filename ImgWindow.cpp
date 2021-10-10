@@ -178,6 +178,10 @@ ImgWindow::~ImgWindow()
 {
 	ImGuiContext *old_ctx = ImGui::GetCurrentContext();
 
+	/* Don't try to restore our old context if we were the last active */
+	if (old_ctx == mImGuiContext)
+		old_ctx = NULL;
+
 	ImGui::SetCurrentContext(mImGuiContext);
 	if (!mFontAtlas) {
 	    // if we didn't have an explicit font atlas, destroy the texture.
