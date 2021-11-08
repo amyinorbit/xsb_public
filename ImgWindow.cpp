@@ -615,3 +615,17 @@ ImgWindow::SetPositioningMode(XPLMWindowPositioningMode mode, int monitor)
 {
 	XPLMSetWindowPositioningMode(mWindowID, mode, monitor);
 }
+
+void
+ImgWindow::TakeKeyboardFocus(void)
+{
+	XPLMTakeKeyboardFocus(mWindowID);
+}
+
+void
+ImgWindow::ReleaseKeyboardFocus(void)
+{
+	if (XPLMHasKeyboardFocus(mWindowID))
+		XPLMTakeKeyboardFocus(NULL);
+}
+

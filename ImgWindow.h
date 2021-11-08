@@ -252,6 +252,8 @@ public:
 	void Center(void);
 	void SetResizingLimits(int minw, int minh, int maxw, int maxh);
 	void SetPositioningMode(XPLMWindowPositioningMode mode, int monitor);
+	void TakeKeyboardFocus(void);
+	void ReleaseKeyboardFocus(void);
 };
 
 #endif // #ifndef IMGWINDOW_H
