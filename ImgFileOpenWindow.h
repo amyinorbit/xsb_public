@@ -49,7 +49,7 @@ typedef struct {
 
 class ImgFileOpenWindow : public ImgWindow {
 	bool				save;
-	bool				confirm_overwrite;
+	bool				confirm_overwrite = false;
 	delay_line_t			refresh_intval;
 	std::string			sel_filename = "";
 	std::vector<file_info_t>	files;
@@ -57,7 +57,7 @@ class ImgFileOpenWindow : public ImgWindow {
 	std::string			dirpath;
 	file_win_done_cb_t		done_cb;
 	void				*userinfo;
-	uint64_t			last_click_t;
+	uint64_t			last_click_t = 0;
 
 	void buildInterface(void);
 	void confirm(void);
