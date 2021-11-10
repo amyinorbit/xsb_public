@@ -64,8 +64,8 @@ class ImgFileOpenWindow : public ImgWindow {
 	void refresh(void);
 public:
 	ImgFileOpenWindow(std::string title, std::string dirpath,
-	    std::string exts, bool save_window, file_win_done_cb_t done_cb,
-	    void *userinfo);
+	    std::string exts, bool save_window, bool modal,
+	    file_win_done_cb_t done_cb, void *userinfo);
 };
 
 #endif	/* _IMG_FILE_OPEN_WINDOW_H_ */

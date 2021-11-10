@@ -45,10 +45,11 @@ match_extension(const char *file_ext, const char *match_ext)
 }
 
 ImgFileOpenWindow::ImgFileOpenWindow(std::string title, std::string dirpath,
-    std::string exts, bool save_window, file_win_done_cb_t done_cb,
+    std::string exts, bool save_window, bool modal, file_win_done_cb_t done_cb,
     void *userinfo) :
     ImgWindow(100, WIN_HEIGHT + 100, WIN_WIDTH + 100, 100,
-    xplm_WindowDecorationRoundRectangle, xplm_WindowLayerModal)
+    xplm_WindowDecorationRoundRectangle,
+    modal ? xplm_WindowLayerModal : xplm_WindowLayerFloatingWindows)
 {
 	ASSERT(done_cb != NULL);
 
