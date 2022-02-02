@@ -37,6 +37,7 @@
 #include <acfutils/core.h>
 #include <acfutils/delay_line.h>
 #include <acfutils/helpers.h>
+#include <acfutils/stat.h>
 
 #include "ImgWindow.h"
 

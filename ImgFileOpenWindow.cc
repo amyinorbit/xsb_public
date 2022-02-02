@@ -19,12 +19,6 @@
 #include <algorithm>
 #include <time.h>
 
-#if	!IBM
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#endif	/* !IBM */
-
 #include "ImgFileOpenWindow.h"
 
 #include <acfutils/assert.h>

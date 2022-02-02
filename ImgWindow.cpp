@@ -40,6 +40,7 @@
 #include <GL/glew.h>
 #include "ImgWindow.h"
 
+#include <acfutils/stat.h>
 #include <acfutils/widget.h>
 
 static XPLMDataRef		gVrEnabledRef			= nullptr;
