@@ -37,7 +37,7 @@
 #include <XPLMDataAccess.h>
 #include <XPLMDisplay.h>
 #include <XPLMGraphics.h>
-#include <GL/glew.h>
+#include <acfutils/glew.h>
 #include "ImgWindow.h"
 
 #include <acfutils/stat.h>

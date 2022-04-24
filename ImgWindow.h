@@ -35,7 +35,7 @@
 #ifndef IMGWINDOW_H
 #define IMGWINDOW_H
 
-#include <GL/glew.h>
+#include <acfutils/glew.h>
 #include <string>
 #include <memory>
 #include <queue>
