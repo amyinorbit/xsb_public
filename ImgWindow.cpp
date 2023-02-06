@@ -58,10 +58,10 @@ ImgWindow::ImgWindow(
 	int bottom,
 	XPLMWindowDecoration decoration,
 	XPLMWindowLayer layer) :
-	mIsInVR(false),
-	mPreferredLayer(layer),
 	mFirstRender(true),
-	mFontAtlas(sFontAtlas)
+	mFontAtlas(sFontAtlas),
+	mIsInVR(false),
+	mPreferredLayer(layer)
 {
 	ImGuiContext *old_ctx = ImGui::GetCurrentContext();
 
