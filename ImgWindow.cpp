@@ -84,39 +84,15 @@ ImgWindow::ImgWindow(
 		first_init=true;
 	}
 
-	// set up the Keymap
-	io.KeyMap[ImGuiKey_Tab] = XPLM_VK_TAB;
-	io.KeyMap[ImGuiKey_LeftArrow] = XPLM_VK_LEFT;
-	io.KeyMap[ImGuiKey_RightArrow] = XPLM_VK_RIGHT;
-	io.KeyMap[ImGuiKey_UpArrow] = XPLM_VK_UP;
-	io.KeyMap[ImGuiKey_DownArrow] = XPLM_VK_DOWN;
-	io.KeyMap[ImGuiKey_PageUp] = XPLM_VK_PRIOR;
-	io.KeyMap[ImGuiKey_PageDown] = XPLM_VK_NEXT;
-	io.KeyMap[ImGuiKey_Home] = XPLM_VK_HOME;
-	io.KeyMap[ImGuiKey_End] = XPLM_VK_END;
-	io.KeyMap[ImGuiKey_Insert] = XPLM_VK_INSERT;
-	io.KeyMap[ImGuiKey_Delete] = XPLM_VK_DELETE;
-	io.KeyMap[ImGuiKey_Backspace] = XPLM_VK_BACK;
-	io.KeyMap[ImGuiKey_Space] = XPLM_VK_SPACE;
-    io.KeyMap[ImGuiKey_Enter] = XPLM_VK_RETURN;
-    io.KeyMap[ImGuiKey_Escape] = XPLM_VK_ESCAPE;
-    io.KeyMap[ImGuiKey_KeyPadEnter] = XPLM_VK_ENTER;
-	io.KeyMap[ImGuiKey_A] = XPLM_VK_A;
-	io.KeyMap[ImGuiKey_C] = XPLM_VK_C;
-	io.KeyMap[ImGuiKey_V] = XPLM_VK_V;
-	io.KeyMap[ImGuiKey_X] = XPLM_VK_X;
-	io.KeyMap[ImGuiKey_Y] = XPLM_VK_Y;
-	io.KeyMap[ImGuiKey_Z] = XPLM_VK_Z;
-
 	// disable window rounding since we're not rendering the frame anyway.
 	auto &style = ImGui::GetStyle();
 	style.WindowRounding = 0;
 
 	// bind the font
 	if (mFontAtlas) {
-        mFontTexture = static_cast<GLuint>(reinterpret_cast<intptr_t>(io.Fonts->TexID));
+        mFontTexture = static_cast<GLuint>(io.Fonts->TexID);
     } else {
-        if (iFontAtlas->TexID == nullptr) {
+        if (iFontAtlas->TexID == 0) {
             // fallback binding if an atlas wasn't explicitly set.
             unsigned char *pixels;
             int width, height;
@@ -141,7 +117,7 @@ ImgWindow::ImgWindow(
                          GL_ALPHA,
                          GL_UNSIGNED_BYTE,
                          pixels);
-            io.Fonts->SetTexID((void *)((intptr_t)(mFontTexture)));
+            io.Fonts->SetTexID(mFontTexture);
         }
     }
 
@@ -330,6 +306,33 @@ ImgWindow::translateImguiToBoxel(float inX, float inY, int &outX, int &outY)
 	outY = (int)(mTop - inY);
 }
 
+static const ImGuiKey vkeys[] = {
+	ImGuiKey_Tab,
+	ImGuiKey_LeftArrow,
+	ImGuiKey_RightArrow,
+	ImGuiKey_UpArrow,
+	ImGuiKey_DownArrow,
+	ImGuiKey_PageUp,
+	ImGuiKey_PageDown,
+	ImGuiKey_Home,
+	ImGuiKey_End,	
+	ImGuiKey_Insert,
+	ImGuiKey_Delete,
+	ImGuiKey_Backspace,
+	ImGuiKey_Space,
+	ImGuiKey_Enter,
+	ImGuiKey_Escape,
+	ImGuiKey_KeypadEnter,
+	ImGuiKey_KeypadEnter,
+	ImGuiKey_KeypadEnter,
+	ImGuiKey_KeypadEnter,
+	ImGuiKey_A,
+	ImGuiKey_C,
+	ImGuiKey_V,
+	ImGuiKey_X,
+	ImGuiKey_Y,
+	ImGuiKey_Z,
+};
 
 void
 ImgWindow::updateImgui()
@@ -368,8 +371,8 @@ ImgWindow::updateImgui()
 	else if (!io.WantTextInput && hasKeyboardFocus) {
 		XPLMTakeKeyboardFocus(nullptr);
 		// reset keysdown otherwise we'll think any keys used to defocus the keyboard are still down!
-		for (auto &key : io.KeysDown) {
-			key = false;
+		for(auto k: vkeys) {
+			io.AddKeyEvent(k, false);
 		}
 	}
 	mFirstRender = false;
@@ -436,14 +439,47 @@ ImgWindow::HandleKeyFuncCB(
 	ImGuiIO& io = ImGui::GetIO();
 	if (io.WantCaptureKeyboard) {
 		auto vk = static_cast<unsigned char>(inVirtualKey);
-		io.KeysDown[vk] = (inFlags & xplm_DownFlag) == xplm_DownFlag;
-		io.KeyShift = (inFlags & xplm_ShiftFlag) == xplm_ShiftFlag;
-		io.KeyAlt = (inFlags & xplm_OptionAltFlag) == xplm_OptionAltFlag;
-		io.KeyCtrl = (inFlags & xplm_ControlFlag) == xplm_ControlFlag;
+		
+		
+		bool down = (inFlags & xplm_DownFlag) == xplm_DownFlag;
+		bool shift = (inFlags & xplm_ShiftFlag) == xplm_ShiftFlag;
+		bool alt = (inFlags & xplm_OptionAltFlag) == xplm_OptionAltFlag;
+		bool ctrl = (inFlags & xplm_ControlFlag) == xplm_ControlFlag;
+		
+		switch(vk) {
+			case XPLM_VK_TAB:		io.AddKeyEvent(ImGuiKey_Tab, down);				break;
+			case XPLM_VK_LEFT:		io.AddKeyEvent(ImGuiKey_LeftArrow, down);		break;
+			case XPLM_VK_RIGHT:		io.AddKeyEvent(ImGuiKey_RightArrow, down);		break;
+			case XPLM_VK_UP:		io.AddKeyEvent(ImGuiKey_UpArrow, down);			break;
+			case XPLM_VK_DOWN:		io.AddKeyEvent(ImGuiKey_DownArrow, down);		break;
+			case XPLM_VK_PRIOR:		io.AddKeyEvent(ImGuiKey_PageUp, down);			break;
+			case XPLM_VK_NEXT:		io.AddKeyEvent(ImGuiKey_PageDown, down);		break;
+			case XPLM_VK_HOME:		io.AddKeyEvent(ImGuiKey_Home, down);			break;
+			case XPLM_VK_END:		io.AddKeyEvent(ImGuiKey_End, down);				break;
+			case XPLM_VK_INSERT:	io.AddKeyEvent(ImGuiKey_Insert, down);			break;
+			case XPLM_VK_DELETE:	io.AddKeyEvent(ImGuiKey_Delete, down);			break;
+			case XPLM_VK_BACK:		io.AddKeyEvent(ImGuiKey_Backspace, down);		break;
+			case XPLM_VK_SPACE:		io.AddKeyEvent(ImGuiKey_Space, down);			break;
+			case XPLM_VK_RETURN:	io.AddKeyEvent(ImGuiKey_Enter, down);			break;
+			case XPLM_VK_ESCAPE:	io.AddKeyEvent(ImGuiKey_Escape, down);			break;
+			case XPLM_VK_ENTER:		io.AddKeyEvent(ImGuiKey_KeypadEnter, down);		break;
+			case XPLM_VK_A:			io.AddKeyEvent(ImGuiKey_A, down);				break;
+			case XPLM_VK_C:			io.AddKeyEvent(ImGuiKey_C, down);				break;
+			case XPLM_VK_V:			io.AddKeyEvent(ImGuiKey_V, down);				break;
+			case XPLM_VK_X:			io.AddKeyEvent(ImGuiKey_X, down);				break;
+			case XPLM_VK_Y:			io.AddKeyEvent(ImGuiKey_Y, down);				break;
+			case XPLM_VK_Z:			io.AddKeyEvent(ImGuiKey_Z, down);				break;
+		}
+		
+		
+		// io.KeysDown[vk] = (inFlags & xplm_DownFlag) == xplm_DownFlag;
+		io.KeyShift = shift;
+		io.KeyAlt = alt;
+		io.KeyCtrl = ctrl;
 
 		if ((inFlags & xplm_DownFlag) == xplm_DownFlag
-			&& !io.KeyCtrl
-			&& !io.KeyAlt
+			&& !ctrl
+			&& !alt
 			&& isprint(inKey)) {
 			char smallStr[2] = { inKey, 0 };
 			io.AddInputCharactersUTF8(smallStr);
