@@ -441,34 +441,35 @@ ImgWindow::HandleKeyFuncCB(
 		auto vk = static_cast<unsigned char>(inVirtualKey);
 		
 		
-		bool down = (inFlags & xplm_DownFlag) == xplm_DownFlag;
+        // bool down = (inFlags & xplm_DownFlag) == xplm_DownFlag;
+        bool up = (inFlags & xplm_UpFlag) == xplm_UpFlag;
 		bool shift = (inFlags & xplm_ShiftFlag) == xplm_ShiftFlag;
 		bool alt = (inFlags & xplm_OptionAltFlag) == xplm_OptionAltFlag;
 		bool ctrl = (inFlags & xplm_ControlFlag) == xplm_ControlFlag;
-		
+        
 		switch(vk) {
-			case XPLM_VK_TAB:		io.AddKeyEvent(ImGuiKey_Tab, down);				break;
-			case XPLM_VK_LEFT:		io.AddKeyEvent(ImGuiKey_LeftArrow, down);		break;
-			case XPLM_VK_RIGHT:		io.AddKeyEvent(ImGuiKey_RightArrow, down);		break;
-			case XPLM_VK_UP:		io.AddKeyEvent(ImGuiKey_UpArrow, down);			break;
-			case XPLM_VK_DOWN:		io.AddKeyEvent(ImGuiKey_DownArrow, down);		break;
-			case XPLM_VK_PRIOR:		io.AddKeyEvent(ImGuiKey_PageUp, down);			break;
-			case XPLM_VK_NEXT:		io.AddKeyEvent(ImGuiKey_PageDown, down);		break;
-			case XPLM_VK_HOME:		io.AddKeyEvent(ImGuiKey_Home, down);			break;
-			case XPLM_VK_END:		io.AddKeyEvent(ImGuiKey_End, down);				break;
-			case XPLM_VK_INSERT:	io.AddKeyEvent(ImGuiKey_Insert, down);			break;
-			case XPLM_VK_DELETE:	io.AddKeyEvent(ImGuiKey_Delete, down);			break;
-			case XPLM_VK_BACK:		io.AddKeyEvent(ImGuiKey_Backspace, down);		break;
-			case XPLM_VK_SPACE:		io.AddKeyEvent(ImGuiKey_Space, down);			break;
-			case XPLM_VK_RETURN:	io.AddKeyEvent(ImGuiKey_Enter, down);			break;
-			case XPLM_VK_ESCAPE:	io.AddKeyEvent(ImGuiKey_Escape, down);			break;
-			case XPLM_VK_ENTER:		io.AddKeyEvent(ImGuiKey_KeypadEnter, down);		break;
-			case XPLM_VK_A:			io.AddKeyEvent(ImGuiKey_A, down);				break;
-			case XPLM_VK_C:			io.AddKeyEvent(ImGuiKey_C, down);				break;
-			case XPLM_VK_V:			io.AddKeyEvent(ImGuiKey_V, down);				break;
-			case XPLM_VK_X:			io.AddKeyEvent(ImGuiKey_X, down);				break;
-			case XPLM_VK_Y:			io.AddKeyEvent(ImGuiKey_Y, down);				break;
-			case XPLM_VK_Z:			io.AddKeyEvent(ImGuiKey_Z, down);				break;
+			case XPLM_VK_TAB:		io.AddKeyEvent(ImGuiKey_Tab, !up);				break;
+			case XPLM_VK_LEFT:		io.AddKeyEvent(ImGuiKey_LeftArrow, !up);		break;
+			case XPLM_VK_RIGHT:		io.AddKeyEvent(ImGuiKey_RightArrow, !up);		break;
+			case XPLM_VK_UP:		io.AddKeyEvent(ImGuiKey_UpArrow, !up);			break;
+			case XPLM_VK_DOWN:		io.AddKeyEvent(ImGuiKey_DownArrow, !up);		break;
+			case XPLM_VK_PRIOR:		io.AddKeyEvent(ImGuiKey_PageUp, !up);			break;
+			case XPLM_VK_NEXT:		io.AddKeyEvent(ImGuiKey_PageDown, !up);		    break;
+			case XPLM_VK_HOME:		io.AddKeyEvent(ImGuiKey_Home, !up);			    break;
+			case XPLM_VK_END:		io.AddKeyEvent(ImGuiKey_End, !up);				break;
+			case XPLM_VK_INSERT:	io.AddKeyEvent(ImGuiKey_Insert, !up);			break;
+			case XPLM_VK_DELETE:	io.AddKeyEvent(ImGuiKey_Delete, !up);			break;
+			case XPLM_VK_BACK:		io.AddKeyEvent(ImGuiKey_Backspace, !up);		break;
+			case XPLM_VK_SPACE:		io.AddKeyEvent(ImGuiKey_Space, !up);			break;
+			case XPLM_VK_RETURN:	io.AddKeyEvent(ImGuiKey_Enter, !up);			break;
+			case XPLM_VK_ESCAPE:	io.AddKeyEvent(ImGuiKey_Escape, !up);			break;
+			case XPLM_VK_ENTER:		io.AddKeyEvent(ImGuiKey_KeypadEnter, !up);		break;
+			case XPLM_VK_A:			io.AddKeyEvent(ImGuiKey_A, !up);				break;
+			case XPLM_VK_C:			io.AddKeyEvent(ImGuiKey_C, !up);				break;
+			case XPLM_VK_V:			io.AddKeyEvent(ImGuiKey_V, !up);				break;
+			case XPLM_VK_X:			io.AddKeyEvent(ImGuiKey_X, !up);				break;
+			case XPLM_VK_Y:			io.AddKeyEvent(ImGuiKey_Y, !up);				break;
+			case XPLM_VK_Z:			io.AddKeyEvent(ImGuiKey_Z, !up);				break;
 		}
 		
 		
@@ -476,8 +477,11 @@ ImgWindow::HandleKeyFuncCB(
 		io.KeyShift = shift;
 		io.KeyAlt = alt;
 		io.KeyCtrl = ctrl;
+#if APL
+        io.KeySuper = ctrl;
+#endif
 
-		if ((inFlags & xplm_DownFlag) == xplm_DownFlag
+		if (!up
 			&& !ctrl
 			&& !alt
 			&& isprint(inKey)) {
