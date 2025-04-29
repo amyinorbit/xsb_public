@@ -437,15 +437,25 @@ ImgWindow::HandleKeyFuncCB(
 	auto *thisWindow = reinterpret_cast<ImgWindow *>(inRefcon);
 	ImGui::SetCurrentContext(thisWindow->mImGuiContext);
 	ImGuiIO& io = ImGui::GetIO();
-	if (io.WantCaptureKeyboard) {
-		auto vk = static_cast<unsigned char>(inVirtualKey);
-		
-		
-        // bool down = (inFlags & xplm_DownFlag) == xplm_DownFlag;
-        bool up = (inFlags & xplm_UpFlag) == xplm_UpFlag;
-		bool shift = (inFlags & xplm_ShiftFlag) == xplm_ShiftFlag;
-		bool alt = (inFlags & xplm_OptionAltFlag) == xplm_OptionAltFlag;
-		bool ctrl = (inFlags & xplm_ControlFlag) == xplm_ControlFlag;
+    
+    if(losingFocus) {
+        ImGui::SetNextFrameWantCaptureKeyboard(false);
+        return;
+    }
+    
+	auto vk = static_cast<unsigned char>(inVirtualKey);
+	
+    // bool down = (inFlags & xplm_DownFlag) == xplm_DownFlag;
+    bool up = (inFlags & xplm_UpFlag) == xplm_UpFlag;
+	bool shift = (inFlags & xplm_ShiftFlag) == xplm_ShiftFlag;
+	bool alt = (inFlags & xplm_OptionAltFlag) == xplm_OptionAltFlag;
+	bool ctrl = (inFlags & xplm_ControlFlag) == xplm_ControlFlag;
+    
+    if(vk == XPLM_VK_TAB) {
+        logMsg("<tab> event: %s%s", up ? "up" : "down", io.WantCaptureKeyboard ? "*" : "");
+    }
+    
+    // if (io.WantCaptureKeyboard) {
         
 		switch(vk) {
 			case XPLM_VK_TAB:		io.AddKeyEvent(ImGuiKey_Tab, !up);				break;
@@ -488,7 +498,7 @@ ImgWindow::HandleKeyFuncCB(
 			char smallStr[2] = { inKey, 0 };
 			io.AddInputCharactersUTF8(smallStr);
 		}
-	}
+    // }
 }
 
 XPLMCursorStatus
