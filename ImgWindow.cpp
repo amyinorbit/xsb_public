@@ -451,10 +451,6 @@ ImgWindow::HandleKeyFuncCB(
 	bool alt = (inFlags & xplm_OptionAltFlag) == xplm_OptionAltFlag;
 	bool ctrl = (inFlags & xplm_ControlFlag) == xplm_ControlFlag;
     
-    if(vk == XPLM_VK_TAB) {
-        logMsg("<tab> event: %s%s", up ? "up" : "down", io.WantCaptureKeyboard ? "*" : "");
-    }
-    
     // if (io.WantCaptureKeyboard) {
         
 		switch(vk) {
