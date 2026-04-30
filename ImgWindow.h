@@ -81,6 +81,8 @@ public:
      */
     static std::shared_ptr<ImgFontAtlas> sFontAtlas;
 
+    std::string clipboard_buf{};
+
     virtual ~ImgWindow();
 
     /** SetVisible() makes the window visible after making the onShow() call.
@@ -235,10 +237,12 @@ private:
 
     std::string mWindowTitle;
 
-    XPLMWindowID mWindowID;
     ImGuiContext *mImGuiContext;
     GLuint mFontTexture;
     bool mIsInVR;
+    bool no_scrollbar = false;
+    bool no_background = false;
+    bool shows_menu_bar = false;
 
     int mTop;
     int mBottom;
@@ -247,13 +251,25 @@ private:
 
     XPLMWindowLayer mPreferredLayer;
 
+    /* See implementation of SetVisible for why these exist */
+    bool in_build_interface = false;
+    bool want_close_regd = false;
+
+protected:
+    XPLMWindowID mWindowID;
 public:
-	void BringToFront(void);
-	void Center(void);
-	void SetResizingLimits(int minw, int minh, int maxw, int maxh);
-	void SetPositioningMode(XPLMWindowPositioningMode mode, int monitor);
-	void TakeKeyboardFocus(void);
-	void ReleaseKeyboardFocus(void);
+    void BringToFront(void);
+    void Center(void);
+    void SetResizingLimits(int minw, int minh, int maxw, int maxh);
+    bool IsPoppedOut(void);
+    void SetPositioningMode(XPLMWindowPositioningMode mode, int monitor);
+    void TakeKeyboardFocus(void);
+    void ReleaseKeyboardFocus(void);
+    void SetNoBackground(bool flag);
+    void SetNoScrollbar(bool flag);
+    void SetShowsMenuBar(bool flag);
+    void GetWindowGeometry(int &left, int &top, int &right, int &bottom);
+    XPLMWindowID GetWindowID(void);
 };
 
 #endif // #ifndef IMGWINDOW_H
